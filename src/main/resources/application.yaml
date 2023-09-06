@@ -1,0 +1,10 @@
+# spring properties
+spring:
+  cloud:
+    gcp:
+      project-id: prototyping-261511
+      firestore:
+        emulator:
+          enabled: true
+        host-port: localhost:9080
+        project-id: prototyping-261511
