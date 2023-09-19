@@ -1,63 +1,45 @@
 package com.example.demo.controller;
 
-import com.example.demo.aggregate.Aggregate;
-import com.example.demo.command.BalanceVariationStatus;
-import com.example.demo.command.CreateUserCommand;
-import com.example.demo.command.BalanceVariationCommand;
-import com.example.demo.es.events.DecreasedUserPointsEvent;
-import com.example.demo.es.queries.User;
-import com.example.demo.es.repository.UserDocument;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.model.UserModel;
+import com.example.demo.service.CommandService;
+import com.example.demo.service.QueryService;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/user")
 public class DemoController {
 
-    @Autowired
-    private final Aggregate aggregate;
-    //private final UserService userService;
+    private final CommandService commandService;
+    private final QueryService queryService;
 
-    public DemoController(Aggregate aggregate) {
-        this.aggregate = aggregate;
-        //  this.userService = userService;
+    public DemoController(CommandService commandService, QueryService queryService) {
+        this.commandService = commandService;
+        this.queryService = queryService;
     }
 
 
-    //@PostMapping("/{userId}")
-    //@ResponseStatus(HttpStatus.CREATED)
-    //public User create(@RequestBody User user) throws Exception {
-    //    return userService.add(user);
-    //}
-
-    @GetMapping("/read/{documentId}")
-    public Long read(@PathVariable("documentId") String documentId) throws Exception {
-        return aggregate.handleRead(documentId);
+    @PostMapping(value="{userId}/points/add/{points}")
+    public void addUserPoints(
+            @PathVariable("userId") Long userId, @PathVariable("points") Integer points) throws Exception {
+        commandService.addUserPoints(userId, points);
     }
 
-    @GetMapping("/read/")
-    public Flux<UserDocument> read() throws Exception {
-        return aggregate.read();
+    @PostMapping(value="{userId}/points/remove/{points}")
+    public void removeUserPoints(
+            @PathVariable("userId") Long userId, @PathVariable("points") Integer points) throws Exception {
+        commandService.removeUserPoints(userId, points);
     }
 
-    @PostMapping("{userId}/points/add/{points}")
-    public User addUserPoints(
-            @PathVariable("userId") String userId, @PathVariable("points") Integer points) throws Exception {
-        return aggregate.handleUserPointsEvent(new BalanceVariationCommand(userId, points, BalanceVariationStatus.POSITIVE_VARIATION));
+    @PostMapping(value="/{userId}")
+    public void createUser(@PathVariable("userId") Long userId) throws Exception {
+        commandService.createUser(userId);
     }
 
-    @PostMapping("{userId}/points/remove/{points}")
-    public User removeUserPoints(
-            @PathVariable("userId") String userId, @PathVariable("points") Integer points) throws Exception {
-        return aggregate.handleUserPointsEvent(new BalanceVariationCommand(userId, points, BalanceVariationStatus.NEGATIVE_VARIATION));
+    @GetMapping(value = "/{userId}")
+    public UserModel getUser(@PathVariable("userId") Long userId)throws Exception{
+        return queryService.getUser(userId);
     }
 
-    @PostMapping("/{userId}")
-    public User createUser(@PathVariable("userId") String userId) throws Exception {
-        return aggregate.handleCreateUserCommand(new CreateUserCommand(userId));
-    }
+
 
 }
