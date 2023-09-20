@@ -8,13 +8,7 @@ public class UserModel implements Serializable {
     private Long userId;
     private Integer totalPoints;
 
-
     public UserModel() {
-    }
-
-    public UserModel(Long userId, Integer totalPoints) {
-        this.userId = userId;
-        this.totalPoints = totalPoints;
     }
 
     public void handleUserCreationEvent(Long userId){
