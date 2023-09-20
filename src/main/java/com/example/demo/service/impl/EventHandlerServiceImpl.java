@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.event.BalanceVariationEvent;
-import com.example.demo.event.BaseEvent;
+import com.example.demo.dto.event.BalanceVariationEvent;
+import com.example.demo.dto.event.BaseEvent;
 import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.EventHandlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,15 +18,15 @@ public class EventHandlerServiceImpl implements EventHandlerService {
   public void handle(BaseEvent event, UserModel aggregate) {
     switch (event.getEventType()) {
       case CREATE_USER_EVENT:
-        aggregate.handleUserCreationEvent(event.getUserId(), event.getDate());
+        aggregate.handleUserCreationEvent(event.getUserId());
         break;
       case ADD_USER_POINTS:
         aggregate.handleAddPointsEvent(
-            getBalanceVariationEvent(event).getPoints(), event.getDate());
+            getBalanceVariationEvent(event).getPoints());
         break;
       case REMOVE_USER_POINTS:
         aggregate.handleRemovePointsEvent(
-            getBalanceVariationEvent(event).getPoints(), event.getDate());
+            getBalanceVariationEvent(event).getPoints());
         break;
       default:
         break;

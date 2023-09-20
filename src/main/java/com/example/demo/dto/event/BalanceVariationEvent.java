@@ -1,4 +1,4 @@
-package com.example.demo.event;
+package com.example.demo.dto.event;
 
 import java.io.Serializable;
 

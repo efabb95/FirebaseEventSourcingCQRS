@@ -2,7 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.data.EventRepository;
 import com.example.demo.data.SnapshotRepository;
-import com.example.demo.event.BaseEvent;
+import com.example.demo.dto.Snapshot;
+import com.example.demo.dto.event.BaseEvent;
 import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.EventHandlerService;
 import com.example.demo.service.SnapshotService;
@@ -31,29 +32,30 @@ public class SnapshotServiceImpl implements SnapshotService {
   }
 
   @Override
-  public UserModel getSnapshot(Long userId) throws ExecutionException, InterruptedException {
+  public Snapshot getSnapshot(Long userId) throws ExecutionException, InterruptedException {
     return snapshotRepository.getByUserId(userId);
   }
 
   @Override
-  public void saveSnapshot(Long userId, Date eventDate) throws ExecutionException, InterruptedException {
-    UserModel snapshot = snapshotRepository.getByUserId(userId);
+  public void saveSnapshot(Long userId, Date lastEventDate) throws ExecutionException, InterruptedException {
+    Snapshot snapshot = snapshotRepository.getByUserId(userId);
     if (snapshot == null) {
-      snapshot = new UserModel();
       List<BaseEvent> events = eventRepository.getEventsByUserId(userId);
+      snapshot = new Snapshot(lastEventDate);
       this.save(events, snapshot);
     } else {
       final Date snapshotDate = snapshot.getLastEventDate();
-      long deltaMillis = eventDate.getTime() - snapshotDate.getTime();
+      long deltaMillis = lastEventDate.getTime() - snapshotDate.getTime();
       if (deltaMillis > DAY_MILLIS_THRESHOLD) {
         List<BaseEvent> events =
             eventRepository.getEventsByUserIdAndDate(userId, snapshot.getLastEventDate());
+        snapshot.setLastEventDate(lastEventDate);
         save(events, snapshot);
       }
     }
   }
 
-  private void save(List<BaseEvent> events, UserModel snapshot)
+  private void save(List<BaseEvent> events, Snapshot snapshot)
       throws ExecutionException, InterruptedException {
     events.forEach(event -> eventHandlerService.handle(event, snapshot));
     snapshotRepository.save(snapshot);

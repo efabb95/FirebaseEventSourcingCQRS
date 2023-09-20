@@ -2,15 +2,12 @@ package com.example.demo.aggregate;
 
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserModel implements Serializable {
     private static final long serialVersionUID = 802539347880595450L;
     private Long userId;
     private Integer totalPoints;
-    private Date lastEventDate;
+
 
     public UserModel() {
     }
@@ -20,20 +17,17 @@ public class UserModel implements Serializable {
         this.totalPoints = totalPoints;
     }
 
-    public void handleUserCreationEvent(Long userId, Date date){
+    public void handleUserCreationEvent(Long userId){
         this.userId = userId;
         this.totalPoints = 0;
-        this.lastEventDate = date;
     }
 
-    public void handleAddPointsEvent(Integer points, Date date){
+    public void handleAddPointsEvent(Integer points){
         this.totalPoints += points;
-        this.lastEventDate = date;
     }
 
-    public void handleRemovePointsEvent(Integer points, Date date){
+    public void handleRemovePointsEvent(Integer points){
         this.totalPoints -= points;
-        this.lastEventDate = date;
 
     }
 
@@ -51,21 +45,5 @@ public class UserModel implements Serializable {
 
     public void setTotalPoints(Integer totalPoints) {
         this.totalPoints = totalPoints;
-    }
-
-    public Date getLastEventDate() {
-        return lastEventDate;
-    }
-
-    public void setLastEventDate(Date lastEventDate) {
-        this.lastEventDate = lastEventDate;
-    }
-
-    public Map<String, Object> toMap(){
-        Map<String, Object> fields = new HashMap<>();
-        fields.put("userId", userId);
-        fields.put("totalPoints", totalPoints);
-        fields.put("lastEventDate", lastEventDate);
-        return fields;
     }
 }
