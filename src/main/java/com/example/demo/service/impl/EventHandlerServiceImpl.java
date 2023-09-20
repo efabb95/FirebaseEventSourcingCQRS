@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.BalanceVariationEvent;
-import com.example.demo.dto.BaseEvent;
+import com.example.demo.event.BalanceVariationEvent;
+import com.example.demo.event.BaseEvent;
 import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.EventHandlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;

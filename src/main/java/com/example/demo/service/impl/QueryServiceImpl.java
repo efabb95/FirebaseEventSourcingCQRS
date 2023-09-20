@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.data.EventRepository;
-import com.example.demo.dto.BaseEvent;
+import com.example.demo.event.BaseEvent;
 import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.EventHandlerService;
 import com.example.demo.service.QueryService;

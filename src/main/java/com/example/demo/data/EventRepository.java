@@ -1,6 +1,6 @@
 package com.example.demo.data;
 
-import com.example.demo.dto.BaseEvent;
+import com.example.demo.event.BaseEvent;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Component;

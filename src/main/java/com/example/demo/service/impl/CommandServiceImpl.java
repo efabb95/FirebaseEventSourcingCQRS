@@ -2,8 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.constants.EventType;
 import com.example.demo.data.EventRepository;
-import com.example.demo.dto.BalanceVariationEvent;
-import com.example.demo.dto.BaseEvent;
+import com.example.demo.event.BalanceVariationEvent;
+import com.example.demo.event.BaseEvent;
 import com.example.demo.service.CommandService;
 import com.example.demo.service.SnapshotService;
 import org.springframework.stereotype.Service;
