@@ -1,14 +1,11 @@
 package com.example.demo.dto;
 
-import com.google.cloud.firestore.annotation.DocumentId;
-import com.google.cloud.spring.data.firestore.Document;
-
 import java.util.Date;
+import java.util.UUID;
 
-@Document(collectionName = "eventStore")
 public class BaseEvent {
-    @DocumentId
-    private String eventId;
+
+    private String eventId = UUID.randomUUID().toString();
     private Long userId;
     private Date date = new Date();
     private String eventType;
