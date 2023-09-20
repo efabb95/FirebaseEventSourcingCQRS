@@ -2,7 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.BalanceVariationEvent;
 import com.example.demo.dto.BaseEvent;
-import com.example.demo.model.UserModel;
+import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.EventHandlerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.demo.data;
 
-import com.example.demo.model.UserModel;
+import com.example.demo.aggregate.UserModel;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Component;

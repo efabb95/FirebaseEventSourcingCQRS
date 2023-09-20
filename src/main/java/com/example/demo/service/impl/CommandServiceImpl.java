@@ -4,12 +4,10 @@ import com.example.demo.constants.EventType;
 import com.example.demo.data.EventRepository;
 import com.example.demo.dto.BalanceVariationEvent;
 import com.example.demo.dto.BaseEvent;
-import com.example.demo.model.UserModel;
 import com.example.demo.service.CommandService;
 import com.example.demo.service.SnapshotService;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 @Service

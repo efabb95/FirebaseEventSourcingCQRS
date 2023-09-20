@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.UserModel;
+import com.example.demo.aggregate.UserModel;
 
 import java.util.concurrent.ExecutionException;
 

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.UserModel;
+import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.CommandService;
 import com.example.demo.service.QueryService;
 import org.springframework.web.bind.annotation.*;
