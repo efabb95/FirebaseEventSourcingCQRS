@@ -30,7 +30,7 @@ public class CommandServiceImpl implements CommandService {
   public void addUserPoints(Long userId, Integer points) throws Exception {
     final Snapshot snapshot = snapshotService.getSnapshot(userId);
     if (snapshot == null) {
-      throw new Exception("User doesn't exist");
+      eventService.createUserEvent(userId);
     }
     eventService.addUserPointsEvent(userId, points);
   }
@@ -39,7 +39,7 @@ public class CommandServiceImpl implements CommandService {
   public void removeUserPoints(Long userId, Integer points) throws Exception {
     final Snapshot snapshot = snapshotService.getSnapshot(userId);
     if (snapshot == null) {
-      throw new Exception("User doesn't exist");
+      eventService.createUserEvent(userId);
     }
     eventService.removeUserPointsEvent(userId, points);
   }

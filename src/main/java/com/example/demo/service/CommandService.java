@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.util.concurrent.ExecutionException;
-
 public interface CommandService {
   void createUser(Long userId) throws Exception;
 
