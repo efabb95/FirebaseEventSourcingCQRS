@@ -34,8 +34,6 @@ public class EventHandlerServiceImpl implements EventHandlerService {
   }
 
   private BalanceVariationEvent getBalanceVariationEvent(BaseEvent event) {
-    final var balanceVariationEvent =
-        mapper.convertValue(event.getEventPayload(), BalanceVariationEvent.class);
-    return balanceVariationEvent;
+    return mapper.convertValue(event.getEventPayload(), BalanceVariationEvent.class);
   }
 }
