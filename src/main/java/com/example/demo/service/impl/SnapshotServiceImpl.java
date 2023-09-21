@@ -1,10 +1,10 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.aggregate.EventHandler;
 import com.example.demo.data.EventRepository;
 import com.example.demo.data.SnapshotRepository;
 import com.example.demo.dto.Snapshot;
 import com.example.demo.dto.event.BaseEvent;
-import com.example.demo.service.EventHandlerService;
 import com.example.demo.service.SnapshotService;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +19,15 @@ public class SnapshotServiceImpl implements SnapshotService {
   private static final long DAY_MILLIS_THRESHOLD = 30*1000;
   private final EventRepository eventRepository;
   private final SnapshotRepository snapshotRepository;
-  private final EventHandlerService eventHandlerService;
+  private final EventHandler eventHandler;
 
   public SnapshotServiceImpl(
       EventRepository eventRepository,
       SnapshotRepository snapshotRepository,
-      EventHandlerService eventHandlerService) {
+      EventHandler eventHandler) {
     this.eventRepository = eventRepository;
     this.snapshotRepository = snapshotRepository;
-    this.eventHandlerService = eventHandlerService;
+    this.eventHandler = eventHandler;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 
   private void save(List<BaseEvent> events, Snapshot snapshot)
       throws ExecutionException, InterruptedException {
-    events.forEach(event -> eventHandlerService.handle(event, snapshot));
+    events.forEach(event -> eventHandler.handle(event, snapshot));
     snapshotRepository.save(snapshot);
   }
 
