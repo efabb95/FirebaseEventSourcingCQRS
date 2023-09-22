@@ -15,8 +15,8 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class SnapshotServiceImpl implements SnapshotService {
 
-  //private static final long DAY_MILLIS_THRESHOLD = 24 * 60 * 60 * 1000;
-  private static final long DAY_MILLIS_THRESHOLD = 30*1000;
+  // private static final long DAY_MILLIS_THRESHOLD = 24 * 60 * 60 * 1000;
+  private static final long DAY_MILLIS_THRESHOLD = 30 * 1000;
   private final EventRepository eventRepository;
   private final SnapshotRepository snapshotRepository;
   private final EventHandler eventHandler;
@@ -36,19 +36,18 @@ public class SnapshotServiceImpl implements SnapshotService {
   }
 
   @Override
-  public void saveSnapshot(Long userId, Date eventDate) throws ExecutionException, InterruptedException {
+  public void saveSnapshot(Long userId) throws ExecutionException, InterruptedException {
     Snapshot snapshot = snapshotRepository.getByUserId(userId);
     if (snapshot == null) {
       List<BaseEvent> events = eventRepository.getEventsByUserId(userId);
-      this.save(events, new Snapshot(this.getLastEventDate(events)));
+      final Date lastEventDate = this.getLastEventDate(events);
+      this.save(events, new Snapshot(lastEventDate));
     } else {
-      final long deltaMillis = eventDate.getTime() - snapshot.getLastEventDate().getTime();
-      if (deltaMillis > DAY_MILLIS_THRESHOLD) {
-        List<BaseEvent> events =
-            eventRepository.getEventsByUserIdAndDate(userId, snapshot.getLastEventDate());
-        snapshot.setLastEventDate(this.getLastEventDate(events));
-        this.save(events, snapshot);
-      }
+      List<BaseEvent> events =
+          eventRepository.getEventsByUserIdAndDate(userId, snapshot.getLastEventDate());
+      final Date lastEventDate = this.getLastEventDate(events);
+      snapshot.setLastEventDate(lastEventDate);
+      this.save(events, snapshot);
     }
   }
 
@@ -58,7 +57,7 @@ public class SnapshotServiceImpl implements SnapshotService {
     snapshotRepository.save(snapshot);
   }
 
-  private Date getLastEventDate(List<BaseEvent> events){
+  private Date getLastEventDate(List<BaseEvent> events) {
     return events.stream().map(BaseEvent::getDate).max(Date::compareTo).get();
   }
 }

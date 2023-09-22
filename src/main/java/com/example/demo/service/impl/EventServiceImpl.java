@@ -5,7 +5,6 @@ import com.example.demo.data.EventRepository;
 import com.example.demo.dto.event.BalanceVariation;
 import com.example.demo.dto.event.BaseEvent;
 import com.example.demo.service.EventService;
-import com.example.demo.service.SnapshotService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,15 +15,14 @@ import java.util.concurrent.ExecutionException;
 public class EventServiceImpl implements EventService {
 
   private final EventRepository eventRepository;
-  private final SnapshotService snapshotService;
 
-  public EventServiceImpl(EventRepository eventRepository, SnapshotService snapshotService) {
+  public EventServiceImpl(EventRepository eventRepository) {
     this.eventRepository = eventRepository;
-    this.snapshotService = snapshotService;
   }
 
   @Override
-  public List<BaseEvent> getEventsByUserId(Long userId) throws ExecutionException, InterruptedException {
+  public List<BaseEvent> getEventsByUserId(Long userId)
+      throws ExecutionException, InterruptedException {
     return eventRepository.getEventsByUserId(userId);
   }
 
@@ -37,7 +35,7 @@ public class EventServiceImpl implements EventService {
   @Override
   public void createUserEvent(Long userId) throws ExecutionException, InterruptedException {
     BaseEvent event = new BaseEvent(userId, EventType.CREATE_USER_EVENT, null);
-    saveEventAndSnapshot(event);
+    saveEvent(event);
   }
 
   @Override
@@ -45,7 +43,7 @@ public class EventServiceImpl implements EventService {
       throws ExecutionException, InterruptedException {
     BalanceVariation balanceVariation = new BalanceVariation(points);
     BaseEvent event = new BaseEvent(userId, EventType.ADD_USER_POINTS, balanceVariation);
-    saveEventAndSnapshot(event);
+    saveEvent(event);
   }
 
   @Override
@@ -53,12 +51,11 @@ public class EventServiceImpl implements EventService {
       throws ExecutionException, InterruptedException {
     BalanceVariation balanceVariation = new BalanceVariation(points);
     BaseEvent event = new BaseEvent(userId, EventType.REMOVE_USER_POINTS, balanceVariation);
-    saveEventAndSnapshot(event);
+    saveEvent(event);
   }
 
-  private void saveEventAndSnapshot(BaseEvent event)
+  private void saveEvent(BaseEvent event)
       throws ExecutionException, InterruptedException {
     eventRepository.saveEvent(event);
-    snapshotService.saveSnapshot(event.getUserId(), event.getDate());
   }
 }

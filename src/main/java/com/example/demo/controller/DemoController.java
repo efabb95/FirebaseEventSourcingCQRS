@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.aggregate.UserModel;
 import com.example.demo.service.CommandService;
 import com.example.demo.service.QueryService;
+import com.example.demo.service.SnapshotService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,10 +12,12 @@ public class DemoController {
 
     private final CommandService commandService;
     private final QueryService queryService;
+    private final SnapshotService snapshotService;
 
-    public DemoController(CommandService commandService, QueryService queryService) {
+    public DemoController(CommandService commandService, QueryService queryService, SnapshotService snapshotService) {
         this.commandService = commandService;
         this.queryService = queryService;
+        this.snapshotService = snapshotService;
     }
 
 
@@ -38,6 +41,10 @@ public class DemoController {
     @GetMapping(value = "/{userId}")
     public UserModel getUser(@PathVariable("userId") Long userId)throws Exception{
         return queryService.getUser(userId);
+    }
+
+    public void saveSnapshot(@PathVariable("userId") Long userId) throws Exception {
+        snapshotService.saveSnapshot(userId);
     }
 
 

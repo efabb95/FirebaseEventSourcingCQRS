@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import com.example.demo.aggregate.EventHandler;
 import com.example.demo.aggregate.UserModel;
-import com.example.demo.data.EventRepository;
 import com.example.demo.dto.Snapshot;
 import com.example.demo.service.EventService;
 import com.example.demo.service.QueryService;
@@ -30,9 +29,23 @@ public class QueryServiceImpl implements QueryService {
   @Override
   public UserModel getUser(Long userId) throws ExecutionException, InterruptedException {
     Snapshot snapshot = snapshotService.getSnapshot(userId);
+    if (snapshot != null){
+      return getFromSnapshot(snapshot);
+    }
+    return this.getFromHistory(userId);
+  }
+
+  private UserModel getFromSnapshot(Snapshot snapshot) throws ExecutionException, InterruptedException {
+    final Long userId = snapshot.getUserId();
     eventService
-        .getEventsByUserIdAndDate(userId, snapshot.getLastEventDate())
-        .forEach(event -> eventHandler.handle(event, snapshot));
+            .getEventsByUserIdAndDate(userId, snapshot.getLastEventDate())
+            .forEach(event -> eventHandler.handle(event, snapshot));
     return snapshot.toUserModel();
+  }
+
+  private UserModel getFromHistory(Long userId) throws ExecutionException, InterruptedException {
+    UserModel userModel = new UserModel();
+    eventService.getEventsByUserId(userId).forEach(event -> eventHandler.handle(event, userModel));
+    return userModel;
   }
 }
